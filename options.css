@@ -3,9 +3,11 @@ body {
 }
 
 #movie_categories, #tv_categories {
+  padding: 10px;
   float: left;
 }
 
 #sorting {
+  padding: 10px;
   clear: both;
 }

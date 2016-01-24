@@ -1,14 +1,14 @@
 {
 	"manifest_version": 2,
 	"name": "IMDb IPT Search",
-	"version": "0.1",
-	"description": "Displays a IPTorrents search button on IMDb title pages.",
+	"version": "1.0",
+	"description": "Displays a IPTorrents search button on IMDb title (TV and Movie) pages.",
 	"author": "kaptainkommie",
 
   "permissions": [
     "storage"
     ],
-    
+ 	
 	"content_scripts": [
 		{
 			"matches": ["*://www.imdb.com/title/*"],

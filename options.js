@@ -1,10 +1,4 @@
-document.getElementById("movie_categories").addEventListener("change", onCategoryChange);
-document.getElementById("tv_categories").addEventListener("change", onCategoryChange);
-document.getElementById("reset").addEventListener("click", onResetClicked);
-
-var movie_categories = document.getElementsByName("movie_category");
-var tv_categories = document.getElementsByName("tv_category");
-var default_options = {
+var DEFAULT_OPTIONS = { // options to use if storage.sync fails or doesn't exist
   "all_movies": true,
   "movie_3d": true,
   "movie_480p": true,
@@ -39,44 +33,165 @@ var default_options = {
   "sort_options": "newest"
 }
 
+var optionsElements = new Object(); // hold DOM "options" elements
+var currentOptions = new Object(); // hold the actual options
 
-function saveOptions() {
 
+function getOptionsElements(elements) {
+  options =  {
+    "all_movies": document.getElementById("all_movies"),
+    "movie_3d": document.getElementById("movie_3d"),
+    "movie_480p": document.getElementById("movie_480p"),
+    "movie_bd-r": document.getElementById("movie_bd-r"),
+    "movie_bd-rip": document.getElementById("movie_bd-rip"),
+    "movie_cam": document.getElementById("movie_cam"),
+    "movie_dvd-r": document.getElementById("movie_dvd-r"),
+    "movie_hd-bluray": document.getElementById("movie_hd-bluray"),
+    "movie_kids": document.getElementById("movie_kids"),
+    "movie_mp4": document.getElementById("movie_mp4"),
+    "movie_non-english": document.getElementById("movie_non-english"),
+    "movie_packs": document.getElementById("movie_packs"),
+    "movie_web-dl": document.getElementById("movie_web-dl"),
+    "movie_xvid": document.getElementById("movie_xvid"),
+    
+    "all_tv": document.getElementById("all_tv"),
+    "tv_documentaries": document.getElementById("tv_documentaries"),
+    "tv_sports": document.getElementById("tv_sports"),
+    "tv_480p": document.getElementById("tv_480p"),
+    "tv_bd": document.getElementById("tv_bd"),
+    "tv_dvd-r": document.getElementById("tv_dvd-r"),
+    "tv_dvd-rip": document.getElementById("tv_dvd-rip"),
+    "tv_mp4": document.getElementById("tv_mp4"),
+    "tv_non-english": document.getElementById("tv_non-english"),
+    "tv_packs": document.getElementById("tv_packs"),
+    "tv_packs-non-english": document.getElementById("tv_packs-non-english"),
+    "tv_sd-x264": document.getElementById("tv_sd-x264"),
+    "tv_web-dl": document.getElementById("tv_web-dl"),
+    "tv_x264": document.getElementById("tv_x264"),
+    "tv_xvid": document.getElementById("tv_xvid"),
+    
+    "sort_options": document.getElementById("sort_options")
+  }
+  
+  // copy options properties, to elements object
+  for (var prop in options) {
+    elements[prop] = options[prop]
+  }
 }
 
-function onResetClicked() {
-  setAllMoviesCheckboxes(true);
-  setAllTVCheckboxes(true);
-  setSortOption(0);  
+function readOptionsPage(elements, optionsObject) {
+  for (key in elements) {
+    if(elements.hasOwnProperty(key)) {
+      if(key != "sort_options")
+        optionsObject[key] = elements[key].checked;
+      else
+        optionsObject[key] = elements[key].value;
+    }
+  }
 }
 
-function setSortOption(id) {
-  document.getElementById("sort_options").options[id].selected = "selected";
+function writeOptionsPage(elements, optionsObject) {
+  for(var key in elements) {
+    if(elements.hasOwnProperty(key) && optionsObject.hasOwnProperty(key)) {
+      if(key != "sort_options") {
+        elements[key].checked = optionsObject[key];
+      }
+      else
+        elements[key].value = optionsObject[key];
+    }
+  }
 }
 
-function onCategoryChange(event) {
+function initializeOptions(elements, optionsObject, defaultOptions) {
+  getOptionsElements(elements);
+  loadOptions(elements, optionsObject, defaultOptions);
+  
+  document.getElementById("movie_categories").addEventListener("change", 
+      function(event) {
+    onCategoryChange(elements, event);
+  });
+  
+  document.getElementById("tv_categories").addEventListener("change",
+      function(event) {
+    onCategoryChange(elements, event);
+  });
+}
+
+function saveOptions(elements, optionsObject) {
+  readOptionsPage(elements, optionsObject);
+  
+  if(optionsObject) {
+    chrome.storage.sync.set(optionsObject, function() {
+      if(!chrome.runtime.lastError) {
+        var status = document.getElementById("status");
+        status.textContent = "Options saved.";
+        setTimeout(function() {
+          status.textContent = "";
+        }, 2000);
+      }
+    });
+  }
+}
+
+function loadOptions(elements, optionsObject, defaultOptions) {  
+  chrome.storage.sync.get(null, function(items) {
+    if(!chrome.runtime.lastError)
+      if(Object.getOwnPropertyNames(items).length > 0)
+      {
+        for(var prop in items) {
+          optionsObject[prop] = items[prop];          
+        }
+      }
+    else {
+      console.log(chrome.runtime.lastError);
+      for(var prop in defaultOptions) {
+        optionsObject[prop] = defaultOptions[prop];
+      }
+    }
+    writeOptionsPage(elements, optionsObject);
+  })
+}
+
+function onCategoryChange(elements, event) {
   if(event.target.name == "movie_category") {
     if(event.target.id == "all_movies")
-      setAllMoviesCheckboxes(event.target.checked);
+      setAllCheckboxes(elements, true, event.target.checked);
     else
-      document.getElementById("all_movies").checked = false;
+     elements["all_movies"].checked = false;
   }
   else if(event.target.name == "tv_category") {
     if(event.target.id == "all_tv")
-      setAllTVCheckboxes(event.target.checked);
+      setAllCheckboxes(elements, false, event.target.checked);
     else
-      document.getElementById("all_tv").checked = false;
+      elements["all_tv"].checked = false;
   }
 }
 
-function setAllMoviesCheckboxes(checked) {
-  for (var i = 0; i < movie_categories.length; i++) {
-    movie_categories[i].checked = checked;
-    };
+function setAllCheckboxes(elements, movies, checked) {
+  for(key in elements) {
+    if(key != "sort_options" && key != "all_movies" && key != "all_tv") {
+      if(elements.hasOwnProperty(key)) {
+        // only do movies
+        if(movies == true) {
+          if(key.indexOf("movie_") != -1)
+            elements[key].checked = checked; 
+        }
+        else { // tv shows
+          if(key.indexOf("tv_") != -1)
+            elements[key].checked = checked;
+        }
+      }
+    }
+  }
 }
 
-function setAllTVCheckboxes(checked) {
-  for (var i = 0; i < tv_categories.length; i++) {
-    tv_categories[i].checked = checked;
-  };  
-}
+document.addEventListener("DOMContentLoaded", function(event) {
+  initializeOptions(optionsElements, currentOptions, DEFAULT_OPTIONS);
+});
+
+document.getElementById('save').addEventListener('click', 
+    function() {
+  saveOptions(optionsElements, currentOptions);
+});
+
+

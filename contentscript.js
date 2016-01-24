@@ -55,7 +55,7 @@ buttonWrapper.appendChild(searchAnchor);
 function createIPTSearchLink(title, year, tvshow) {
   // different base depending on title type
   // TODO: implement categories from extension options
-  if (tvshow)
+  if (isTVSeries)
     linkBase = "https://www.iptorrents.com/t?73=&q=";
   else
     linkBase = "https://www.iptorrents.com/t?72=&q=";
@@ -72,7 +72,7 @@ function isTVSeries() {
   // this was pulled from imdb-rottentomatoes script, seems to work
   if (document.title.indexOf('TV Series') < 0 || 
       document.title.indexOf('TV mini-series') < 0)
-    return 1;
-  else
     return 0;
+  else
+    return 1;
 }
