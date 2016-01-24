@@ -1,0 +1,11 @@
+body {
+  padding: 10px;
+}
+
+#movie_categories, #tv_categories {
+  float: left;
+}
+
+#sorting {
+  clear: both;
+}

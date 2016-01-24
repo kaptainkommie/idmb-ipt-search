@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>IMDb IPT Search Options</title>
+<link rel="stylesheet" type="text/css" href="options.css">
+</head>
+
+<body>
+  <h1>IMDb IPT Search Options</h1>
+  
+    <div id="movie_categories"><b>Movie Categories:</b>
+      <br />
+      <label>
+        <input type="checkbox" name="movie_category" value="72" id="all_movies"> All (Default)
+      </label>
+      <br />
+      <label>
+        <input type="checkbox" name="movie_category" value="87" id="movie_3d"> Movie/3D
+      </label>
+      <br />
+      <label>
+        <input type="checkbox" name="movie_category" value="77" id="movie_480p"> Movie/480p
+      </label>
+      <br />
+      <label>
+        <input type="checkbox" name="movie_category" value="89" id="movie_bd-r"> Movie/BD-R
+      </label>
+      <br />
+      <label>
+        <input type="checkbox" name="movie_category" value="90" id="movie_bd-rip"> Movie/BD-Rip
+      </label>
+      <br />
+      <label>
+        <input type="checkbox" name="movie_category" value="96" id="movie_cam"> Movie/Cam
+      </label>
+      <br />
+      <label>
+        <input type="checkbox" name="movie_category" value="6" id="movie_dvd-r"> Movie/DVD-R
+      </label>
+      <br />
+      <label>
+        <input type="checkbox" name="movie_category" value="48" id="movie_hd-bluray"> Movie/HD/Bluray
+      </label>
+      <br />
+      <label>
+        <input type="checkbox" name="movie_category" value="54" id="movie_kids"> Movie/Kids
+      </label>
+      <br />
+      <label>
+        <input type="checkbox" name="movie_category" value="62 id="movie_mp4"> Movie/MP4
+      </label>
+      <br />
+      <label>
+        <input type="checkbox" name="movie_category" value="38" id="movie_non-english"> Movie/Non-English
+      </label>
+      <br />
+      <label>
+        <input type="checkbox" name="movie_category" value="68" id="movie_packs"> Movie/Packs
+      </label>
+      <br />
+      <label>
+        <input type="checkbox" name="movie_category" value="20" id="movie_web-dl"> Movie/Web-DL
+      </label>
+      <br />
+      <label>
+        <input type="checkbox" name="movie_category" value="7" id="movie_xvid"> Movie/Xvid
+      </label>
+    </div>
+
+    <div id="tv_categories"><b>TV Categories:</b>
+      <br />
+      <label>
+        <input type="checkbox" name="tv_category" value="73" id="all_tv"> All (Default)
+      </label>
+      <br />
+      <label>
+        <input type="checkbox" name="tv_category" value="26" id="tv_documentaries"> Documentaries
+      </label>
+      <br />
+      <label>
+        <input type="checkbox" name="tv_category" value="55" id="tv_sports"> Sports
+      </label>
+      <br />
+      <label>
+        <input type="checkbox" name="tv_category" value="78" id="tv_480p"> TV/480p
+      </label>
+      <br />
+      <label>
+        <input type="checkbox" name="tv_category" value="23" id="tv_bd"> TV/BD
+      </label>
+      <br />
+      <label>
+        <input type="checkbox" name="tv_category" value="24" id="tv_dvd-r"> TV/DVD-R
+      </label>
+      <br />
+      <label>
+        <input type="checkbox" name="tv_category" value="25" id="tv_dvd-rip"> TV/DVD-Rip
+      </label>
+      <br />
+      <label>
+        <input type="checkbox" name="tv_category" value="66" id="tv_mp4"> TV/MP4
+      </label>
+      <br />
+      <label>
+        <input type="checkbox" name="tv_category" value="82" id="tv_non-english"> TV/Non-English
+      </label>
+      <br />
+      <label>
+        <input type="checkbox" name="tv_category" value="65" id="tv_packs"> TV/Packs
+      </label>
+      <br />
+      <label>
+        <input type="checkbox" name="tv_category" value="83" id="tv_packs-non-english"> TV/Packs/Non-English
+      </label>
+      <br />
+      <label>
+        <input type="checkbox" name="tv_category" value="79" id="tv_sd-x264"> TV/SD/x264
+      </label>
+      <br />
+      <label>
+        <input type="checkbox" name="tv_category" value="22" id="tv_web-dl"> TV/Web-DL
+      </label>
+      <br />
+      <label>
+        <input type="checkbox" name="tv_category" value="5" id="tv_x264"> TV/x264
+      </label>
+      <br />
+      <label>
+        <input type="checkbox" name="tv_category" value="4" id="tv_xvid"> TV/Xvid
+      </label>
+    </div>
+
+  <br />
+  <div id="sorting"><b>Sorting:</b>
+    <select name="sorting" id="sort_options">
+      <option value="newest">Newest (Default)</option>
+      <option value="size">Size</option>
+      <option value="completed">Downloads</option>
+      <option value="seeders">Seeders</option>
+      <option value="leechers">Leechers</option>
+    </select>
+  </div>
+  <br />
+  <div id="status"></div>
+  <div>
+    <button id="save">Save</button>
+    <button id="cancel">Cancel</button>
+  </div>
+ <script src="options.js"></script> 
+</body>
+</html>
