@@ -203,7 +203,7 @@ function createIPTSearchLink(title, year, optionsObject, optionValues) {
 //Returns 1 for TV Series, 0 for Movie (hopefully - needs testing)
 function isTVSeries() {
   // this was pulled from imdb-rottentomatoes script, seems to work
-  if (document.title.indexOf('TV Series') < 0 || 
+  if (document.title.indexOf('TV Series') < 0 && 
       document.title.indexOf('TV mini-series') < 0)
     return 0;
   else
