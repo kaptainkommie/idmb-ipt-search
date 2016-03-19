@@ -1,4 +1,4 @@
-# idmb-ipt-search
+# imdb-ipt-search
 IMDb IPTorrents Search is a Chrome Extension that adds an IPTorrents Search Button to IMDB title pages. It should be compatible with all recent versions of Chrome. It was developed on and tested with version 47.0.2526.111. If you run into any compatibility issues please add them to issues.
 
 This Chrome Extension simply adds a button next to the "Watchlist" button on IMDb movie and TV show pages which, when clicked, opens search results from the IPTorrents.com website. The purpose of this extension is simply to reduce the amount of typing and clicks required to search for a movie or TV show on IPTorrents after a user has visited its IMDb page.
