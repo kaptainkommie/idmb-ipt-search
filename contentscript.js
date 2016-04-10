@@ -1,7 +1,7 @@
 /*	IMDb IPTorrent Search
 //
 // 	This is a Chrome extension that adds an "Search IPT" link 
-//	to IMDb movie and TV pages. The link should appear in the "Watch Now Bar".
+//	to IMDb/TVMaze/Next-Episode movie and TV pages.
 //
 //	By default, clicking the "Search" button from a movie page will search all
 //	movie categories on IPT; likewise for TV Shows. The categories searched
@@ -9,11 +9,11 @@
 //	navigating to chrome://extensions in the browser, locating this extension
 //	and clicking the "options" link.
 //
-//	By default, the search results are sorted by "seeds", but this can be
+//	By default, the search results are sorted by "newest", but this can be
 //	customized as well from the extension options dialog.
 //	
 // 	Author: kaptainkommie
-// 	Version 1.0
+// 	Version 1.1
 //	Website: http://www.redrohn.org
 //	Email: rohn.adams@gmail.com
  */
