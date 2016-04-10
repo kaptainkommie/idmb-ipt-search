@@ -53,6 +53,7 @@ Even works on a movie still in theatres:
 (images/imdb-screenshot-theatre.png?raw=true "IMDb Theatre Screenshot")
 
 Screenshot from Next-Episode.net:
+
 ![Next-Episode screenshot]
 (images/next-episode-screenshot.PNG?raw=true "Next-Episode Screenshot")
 
