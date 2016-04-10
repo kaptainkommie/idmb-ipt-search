@@ -1,9 +1,7 @@
 /*	IMDb IPTorrent Search
 //
-// 	This is a quick and dirty Chrome extension that adds an "Search IPT" button 
-//	to IMDb movie and TV pages. The button should appear to the right of the 
-//	yellow "Watchlist" button. The location and style of this button could be
-//	changed by editing this script.
+// 	This is a Chrome extension that adds an "Search IPT" link 
+//	to IMDb movie and TV pages. The link should appear in the "Watch Now Bar".
 //
 //	By default, clicking the "Search" button from a movie page will search all
 //	movie categories on IPT; likewise for TV Shows. The categories searched
@@ -15,7 +13,7 @@
 //	customized as well from the extension options dialog.
 //	
 // 	Author: kaptainkommie
-// 	Version 0.1
+// 	Version 1.0
 //	Website: http://www.redrohn.org
 //	Email: rohn.adams@gmail.com
  */
@@ -88,8 +86,13 @@ var OPTION_VALUES = { // values associated with category
     "tv_xvid": 4,    
 }
 
-//similar function is present in options.js as well, but you can't include
-//a js file inside another pure JS file, oh well
+// init
+var options = new Object();
+
+loadOptions(options, DEFAULT_OPTIONS, OPTION_VALUES);
+
+// similar function is present in options.js as well, but you can't include
+// a js file inside another pure JS file, oh well
 function loadOptions(optionsObject, defaultOptions, optionValues) {  
   chrome.storage.sync.get(null, function(items) {
     if(!chrome.runtime.lastError) {
@@ -112,45 +115,49 @@ function loadOptions(optionsObject, defaultOptions, optionValues) {
 }
 
 function addSearchButton(opt, optValues) {
-  //Here comes the kludge; not particuarly well-versed in JS or DOM
-  //pull the item title, if IMDb layout changes, this might need to as well
-  var itemTitle = document.querySelector("span.itemprop[itemprop=name]").innerHTML;
-
-  //get item year
-  var itemYear = document.querySelector("span.nobr a").innerHTML;
-
-  //get location where button will be placed
-  //TODO: spacing is off, have to try some things
-  var buttonWrapper = document.querySelector("span.wlb_wrapper");
-
-  var iptSearchLink = createIPTSearchLink(itemTitle, itemYear, opt, optValues);
-
-  //TODO: there's got to be a better way, even without jQuery
-  //create the appropriate anchor (a href)
-  var searchAnchor = document.createElement("a");
-
-  searchAnchor.setAttribute("href", iptSearchLink);
-  searchAnchor.className = "btn2 btn2_text_on large";
-
-  //span for the button text itself
-  var searchSpan = document.createElement("span");
-  searchSpan.className = "btn2_text";
-  searchSpan.textContent = "Search IPT";
-
-  //add to the DOM
-  searchAnchor.appendChild(searchSpan);
-  buttonWrapper.appendChild(searchAnchor);
+  // get movie/tv title
+  var itemTitle = document.title;
+  
+  var re = /(.*)(\(.+\)$)/g; 
+  var m;
+   
+  itemTitle = itemTitle.split(" -")[0]; // strip off the IMDB portion
+  
+  if ((m = re.exec(itemTitle)) !== null) {
+    if (m.index === re.lastIndex) {
+        re.lastIndex++;
+    }
+    
+    itemTitle = m[1].slice(0, -1); // strip trailing space
 }
-
-var options = new Object();
-
-loadOptions(options, DEFAULT_OPTIONS, OPTION_VALUES);
+  
+  console.log("Full Title:" + document.title);
+  console.log("Title: " + itemTitle);
+  
+  var parentDiv = document.querySelector("div.showtime");
+  
+  var iptSearchLink = createIPTSearchLink(itemTitle, opt, optValues);
+  
+  console.log("Link: " + iptSearchLink);
+  
+  var searchDiv = document.createElement("div");
+  searchDiv.className = "watch-option secondary-watch-option";
+  
+  var searchAnchor = document.createElement("a");
+  var searchText = document.createTextNode("Search IPT");
+  
+  searchAnchor.setAttribute("href", iptSearchLink);
+  searchAnchor.className = "iptsearch";
+  
+  searchAnchor.appendChild(searchText);
+  searchDiv.appendChild(searchAnchor);
+  parentDiv.appendChild(searchDiv);
+}
 
 //create the IPT search link
 //return escaped IPT search link for particular title
 //TODO: punctuation generally doesn't return good results, option to strip?
-function createIPTSearchLink(title, year, optionsObject, optionValues) {
-  // TODO: implement categories from extension options
+function createIPTSearchLink(title, optionsObject, optionValues) {
   link = "https://www.iptorrents.com/t?"
 
     // different base depending on title type and options
@@ -194,7 +201,7 @@ function createIPTSearchLink(title, year, optionsObject, optionValues) {
     link += "o=" + optionsObject["sort_options"] + ";";
 
   // TODO: test that escape works on weird chars in title
-  // doesn't encode spaces, but chrome seems not to care
+  // doesn't encode spaces, but somehow they get escaped when the tab opens
   fullLink = link + "q=" + escape(title) + "#torrents"; 
 
   return fullLink;
@@ -204,7 +211,7 @@ function createIPTSearchLink(title, year, optionsObject, optionValues) {
 function isTVSeries() {
   // this was pulled from imdb-rottentomatoes script, seems to work
   if (document.title.indexOf('TV Series') < 0 && 
-      document.title.indexOf('TV mini-series') < 0)
+      document.title.indexOf('TV Mini-Series') < 0)
     return 0;
   else
     return 1;
