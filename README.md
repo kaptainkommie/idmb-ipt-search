@@ -38,14 +38,17 @@ Screenshot of the options dialog:
 
 ## Screenshots
 Here is a screenshot of the extension in action on a movie page at IMDb:
+
 ![IMDb movie screenshot]
 (images/imdb-screenshot-movie.png?raw=true "IMDb Movie Screenshot")
 
 On a TV show page:
+
 ![IMDB tv screenshot]
 (images/imdb-screenshot-tv.png?raw=true "IMDb TV Screenshot")
 
 Even works on a movie still in theatres:
+
 ![IMDB theatre screenshot]
 (images/imdb-screenshot-theatre.png?raw=true "IMDb Theatre Screenshot")
 
@@ -54,9 +57,11 @@ Screenshot from Next-Episode.net:
 (images/next-episode-screenshot.png?raw=true "Next-Episode Screenshot")
 
 Screenshot from TVMaze.com:
+
 ![TVMaze screenshot]
 (images/tvmaze-screenshot.png?raw=true "TVMaze Screenshot")
 
 And a screenshot of the results of clicking the "Search IPT" button:
+
 ![IPTorrents screenshot]
 (images/ipt-screenshot.png?raw=true "IPTorrents Screenshot")
