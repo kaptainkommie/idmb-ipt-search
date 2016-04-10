@@ -1,18 +1,21 @@
 # imdb-ipt-search
 IMDb IPTorrents Search is a Chrome Extension that adds an IPTorrents Search Link
-to IMDB title pages. It should be compatible with all recent versions of Chrome.
-It was developed on and tested with version 49.0.2623.112. If you run into any 
-compatibility issues please add them to the project's GitHub Issues page.
+to IMDB title pages. Next-Episode.net is also supported. It should be compatible
+with all recent versions of Chrome. It was developed on and tested with version 
+49.0.2623.112. If you run into any compatibility issues please add them to the 
+project's GitHub Issues page.
 
 This Chrome Extension simply adds a link in the "Watch Now" bar on IMDb movie 
 and TV show pages which, when clicked, opens search results from the
-IPTorrents.com website. The purpose of this extension is simply to reduce the 
-amount of typing and clicks required to search for a movie or TV show on 
-IPTorrents after a user has visited its IMDb page.
+IPTorrents.com website. This same functionality is located under the series
+picture for TV Shows on Next-Episode. The purpose of this extension is simply to
+reduce the amount of typing and clicks required to search for a movie or TV show
+on IPTorrents after a user has visited its page.
 
 **The only permissions required by this extension is access to 
-http://www.imdb.com as well as access to storage, which is simply used to store
-the extension's options. It collects absolutely NO PERSONAL INFORMATION.**
+imdb.com and next-episode.net as well as access to storage, which is simply used
+to store the extension's options. 
+It collects absolutely NO PERSONAL INFORMATION.**
 
 The source code is freely available under the GNU GPL v3 license. In essence it
 is free to use, modify and redistribute so long as the source is made available
@@ -45,6 +48,10 @@ On a TV show page:
 Even works on a movie still in theatres:
 ![IMDB theatre screenshot]
 (images/imdb-screenshot-theatre.png?raw=true "IMDb Theatre Screenshot")
+
+Screenshot from Next-Episode.net:
+![Next-Episode screenshot]
+(images/next-episode-screenshot.png?raw=true "Next-Episode Screenshot")
 
 And a screenshot of the results of clicking the "Search IPT" button:
 ![IPTorrents screenshot]

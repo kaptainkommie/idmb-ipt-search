@@ -119,52 +119,88 @@ function loadOptions(optionsObject, defaultOptions, optionValues) {
 
 function addSearchButton(opt, optValues) {
   // get movie/tv title
-  var itemTitle = document.title;
+  var itemTitle = document.title.split(" -")[0];
+  var domain = document.domain;
+  var iptSearchLink;
+  var searchAnchor;
+  var searchText = document.createTextNode("Search IPT");
+  var searchDiv;
+  var searchAnchor;
   
-  var re = /(.*)(\(.+\)$)/g; 
-  var m;
-   
-  itemTitle = itemTitle.split(" -")[0]; // strip off the IMDB portion
-  
-  if ((m = re.exec(itemTitle)) !== null) {
-    if (m.index === re.lastIndex) {
-        re.lastIndex++;
+  // which site are we on?
+  if (domain.indexOf("imdb.com") != -1) {
+    var re = /(.*)(\(.+\)$)/g; 
+    var m;
+         
+    if ((m = re.exec(itemTitle)) !== null) {
+      if (m.index === re.lastIndex) {
+          re.lastIndex++;
+      }
+      
+      itemTitle = m[1].slice(0, -1); // strip trailing space
     }
     
-    itemTitle = m[1].slice(0, -1); // strip trailing space
-}
+    var parentDiv = document.querySelector("div.showtime");
+    
+    iptSearchLink = createIPTSearchLink(itemTitle, opt, optValues, isTVSeries());
+    
+    searchDiv = document.createElement("div");
+    searchDiv.className = "watch-option secondary-watch-option";
+   
+    searchAnchor = document.createElement("a");
+    
+    searchAnchor.setAttribute("href", iptSearchLink);
+    searchAnchor.className = "iptsearch";
+    
+    searchAnchor.appendChild(searchText);
+    searchDiv.appendChild(searchAnchor);
+    parentDiv.appendChild(searchDiv);
+  }
+  else if (domain.indexOf("next-episode.net") != -1) {
+    parentDiv = document.querySelector("#top_section");
+    
+    iptSearchLink = createIPTSearchLink(itemTitle, opt, optValues, true);
+    
+    searchDiv = document.createElement("div");
+    searchDiv.className = "iptsearch";
+    searchDiv.style.float = "none";
+    searchDiv.style.clear = "both";
+    searchDiv.style.marginRight = "10px";
+    
+    searchAnchor = document.createElement("a");
+    
+    searchAnchor.setAttribute("href", iptSearchLink);
+    searchAnchor.className = "iptsearch";
+    searchAnchor.style.borderRadius = "5px";
+    searchAnchor.style.backgroundColor = "blue";
+    searchAnchor.style.padding = "5px";
+    searchAnchor.style.color = "white";
+    searchAnchor.style.paddingLeft = "6px";
+    searchAnchor.style.paddingRight = "6px";
+    searchAnchor.style.fontSize = "12px";
+    searchAnchor.style.textDecoration = "none";
+    searchAnchor.style.display = "inline-block";
+    searchAnchor.style.marginBottom = "1px";
+    
+    searchAnchor.appendChild(searchText);
+    searchDiv.appendChild(searchAnchor);
+    parentDiv.appendChild(searchDiv);    
+  }
   
   console.log("Full Title:" + document.title);
   console.log("Title: " + itemTitle);
-  
-  var parentDiv = document.querySelector("div.showtime");
-  
-  var iptSearchLink = createIPTSearchLink(itemTitle, opt, optValues);
-  
   console.log("Link: " + iptSearchLink);
   
-  var searchDiv = document.createElement("div");
-  searchDiv.className = "watch-option secondary-watch-option";
-  
-  var searchAnchor = document.createElement("a");
-  var searchText = document.createTextNode("Search IPT");
-  
-  searchAnchor.setAttribute("href", iptSearchLink);
-  searchAnchor.className = "iptsearch";
-  
-  searchAnchor.appendChild(searchText);
-  searchDiv.appendChild(searchAnchor);
-  parentDiv.appendChild(searchDiv);
 }
 
 //create the IPT search link
 //return escaped IPT search link for particular title
 //TODO: punctuation generally doesn't return good results, option to strip?
-function createIPTSearchLink(title, optionsObject, optionValues) {
+function createIPTSearchLink(title, optionsObject, optionValues, tv_show) {
   link = "https://" + optionsObject["ipt_url"] + "/t?";
 
     // different base depending on title type and options
-    if (isTVSeries()) {
+    if (tv_show) {
       // only care about tv options
       // if all_tv selected, we don't need to loop
       if(optionsObject["all_tv"] == true)
