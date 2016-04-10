@@ -54,7 +54,7 @@ Even works on a movie still in theatres:
 
 Screenshot from Next-Episode.net:
 ![Next-Episode screenshot]
-(images/next-episode-screenshot.png?raw=true "Next-Episode Screenshot")
+(images/next-episode-screenshot.PNG?raw=true "Next-Episode Screenshot")
 
 Screenshot from TVMaze.com:
 
