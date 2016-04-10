@@ -156,7 +156,7 @@ function addSearchButton(opt, optValues) {
     searchDiv.appendChild(searchAnchor);
     parentDiv.appendChild(searchDiv);
   }
-  else if (domain.indexOf("next-episode.net") != -1) {
+  else if (domain.indexOf("next-episode.net") != -1) {    
     parentDiv = document.querySelector("#top_section");
     
     iptSearchLink = createIPTSearchLink(itemTitle, opt, optValues, true);
@@ -186,6 +186,30 @@ function addSearchButton(opt, optValues) {
     searchDiv.appendChild(searchAnchor);
     parentDiv.appendChild(searchDiv);    
   }
+  else if (domain.indexOf("tvmaze.com") != -1) {
+    // strip site title
+    itemTitle = itemTitle.split(" |")[0];
+    
+    parentDiv = document.querySelector("#main-img");
+    
+    iptSearchLink = createIPTSearchLink(itemTitle, opt, optValues, true);
+    
+    searchDiv = document.createElement("div");
+    searchDiv.className = "radius small button success fa fa-lg";
+    searchDiv.style.width = "202px";
+    searchDiv.style.backgroundColor = "blue";
+    
+    searchAnchor = document.createElement("a");
+    searchAnchor.setAttribute("href", iptSearchLink);
+    searchAnchor.className = "iptsearch";
+    searchAnchor.style.color = "white";
+    
+    searchAnchor.appendChild(searchText);
+    searchDiv.appendChild(searchAnchor);
+    parentDiv.appendChild(searchDiv);
+  }
+  else
+    console.log("Not a matching site");
   
   console.log("Full Title:" + document.title);
   console.log("Title: " + itemTitle);
