@@ -217,12 +217,22 @@ function addSearchButton(opt, optValues) {
   
 }
 
+function stripPunctuation(title) {
+  var punctuationless = title.replace(/[.',\/#!$%\^&\*;:{}=\-_`~()]/g,"");
+  var finalString = punctuationless.replace(/\s{2,}/g," ");
+  
+  return finalString;
+}
+
 //create the IPT search link
 //return escaped IPT search link for particular title
-//TODO: punctuation generally doesn't return good results, option to strip?
+//TODO: test cases for punctuation removal
 function createIPTSearchLink(title, optionsObject, optionValues, tv_show) {
   link = "https://" + optionsObject["ipt_url"] + "/t?";
-
+  
+  // strip out punctuation for better results
+  strippedTitle = stripPunctuation(title);
+  
     // different base depending on title type and options
     if (tv_show) {
       // only care about tv options
@@ -265,7 +275,7 @@ function createIPTSearchLink(title, optionsObject, optionValues, tv_show) {
 
   // TODO: test that escape works on weird chars in title
   // doesn't encode spaces, but somehow they get escaped when the tab opens
-  fullLink = link + "q=" + escape(title) + "#torrents"; 
+  fullLink = link + "q=" + escape(strippedTitle) + "#torrents"; 
 
   return fullLink;
 }
