@@ -50,7 +50,9 @@ var DEFAULT_OPTIONS = { // options to use if loadOptions fails
     "tv_x264": true,
     "tv_xvid": true,
 
-    "sort_options": "newest"
+    "sort_options": "newest",
+    
+    "ipt_url": "iptorrents.com"  
 }
 
 var OPTION_VALUES = { // values associated with category
@@ -94,6 +96,7 @@ loadOptions(options, DEFAULT_OPTIONS, OPTION_VALUES);
 // similar function is present in options.js as well, but you can't include
 // a js file inside another pure JS file, oh well
 function loadOptions(optionsObject, defaultOptions, optionValues) {  
+  // TODO: does this execute even when storage sync fails?
   chrome.storage.sync.get(null, function(items) {
     if(!chrome.runtime.lastError) {
       if(Object.getOwnPropertyNames(items).length > 0)
@@ -116,52 +119,122 @@ function loadOptions(optionsObject, defaultOptions, optionValues) {
 
 function addSearchButton(opt, optValues) {
   // get movie/tv title
-  var itemTitle = document.title;
+  var itemTitle = document.title.split(" -")[0];
+  var domain = document.domain;
+  var iptSearchLink;
+  var searchAnchor;
+  var searchText = document.createTextNode("Search IPT");
+  var searchDiv;
+  var searchAnchor;
   
-  var re = /(.*)(\(.+\)$)/g; 
-  var m;
-   
-  itemTitle = itemTitle.split(" -")[0]; // strip off the IMDB portion
-  
-  if ((m = re.exec(itemTitle)) !== null) {
-    if (m.index === re.lastIndex) {
-        re.lastIndex++;
+  // which site are we on?
+  if (domain.indexOf("imdb.com") != -1) {
+    var re = /(.*)(\(.+\)$)/g; 
+    var m;
+         
+    if ((m = re.exec(itemTitle)) !== null) {
+      if (m.index === re.lastIndex) {
+          re.lastIndex++;
+      }
+      
+      itemTitle = m[1].slice(0, -1); // strip trailing space
     }
     
-    itemTitle = m[1].slice(0, -1); // strip trailing space
-}
+    var parentDiv = document.querySelector("div.showtime");
+    
+    iptSearchLink = createIPTSearchLink(itemTitle, opt, optValues, isTVSeries());
+    
+    searchDiv = document.createElement("div");
+    searchDiv.className = "watch-option secondary-watch-option";
+   
+    searchAnchor = document.createElement("a");
+    
+    searchAnchor.setAttribute("href", iptSearchLink);
+    searchAnchor.className = "iptsearch";
+    
+    searchAnchor.appendChild(searchText);
+    searchDiv.appendChild(searchAnchor);
+    parentDiv.appendChild(searchDiv);
+  }
+  else if (domain.indexOf("next-episode.net") != -1) {    
+    parentDiv = document.querySelector("#top_section");
+    
+    iptSearchLink = createIPTSearchLink(itemTitle, opt, optValues, true);
+    
+    searchDiv = document.createElement("div");
+    searchDiv.className = "iptsearch";
+    searchDiv.style.float = "none";
+    searchDiv.style.clear = "both";
+    searchDiv.style.marginRight = "10px";
+    
+    searchAnchor = document.createElement("a");
+    
+    searchAnchor.setAttribute("href", iptSearchLink);
+    searchAnchor.className = "iptsearch";
+    searchAnchor.style.borderRadius = "5px";
+    searchAnchor.style.backgroundColor = "blue";
+    searchAnchor.style.padding = "5px";
+    searchAnchor.style.color = "white";
+    searchAnchor.style.paddingLeft = "6px";
+    searchAnchor.style.paddingRight = "6px";
+    searchAnchor.style.fontSize = "12px";
+    searchAnchor.style.textDecoration = "none";
+    searchAnchor.style.display = "inline-block";
+    searchAnchor.style.marginBottom = "1px";
+    
+    searchAnchor.appendChild(searchText);
+    searchDiv.appendChild(searchAnchor);
+    parentDiv.appendChild(searchDiv);    
+  }
+  else if (domain.indexOf("tvmaze.com") != -1) {
+    // strip site title
+    itemTitle = itemTitle.split(" |")[0];
+    
+    parentDiv = document.querySelector("#main-img");
+    
+    iptSearchLink = createIPTSearchLink(itemTitle, opt, optValues, true);
+    
+    searchDiv = document.createElement("div");
+    searchDiv.className = "radius small button success fa fa-lg";
+    searchDiv.style.width = "202px";
+    searchDiv.style.backgroundColor = "blue";
+    
+    searchAnchor = document.createElement("a");
+    searchAnchor.setAttribute("href", iptSearchLink);
+    searchAnchor.className = "iptsearch";
+    searchAnchor.style.color = "white";
+    
+    searchAnchor.appendChild(searchText);
+    searchDiv.appendChild(searchAnchor);
+    parentDiv.appendChild(searchDiv);
+  }
+  else
+    console.log("Not a matching site");
   
   console.log("Full Title:" + document.title);
   console.log("Title: " + itemTitle);
-  
-  var parentDiv = document.querySelector("div.showtime");
-  
-  var iptSearchLink = createIPTSearchLink(itemTitle, opt, optValues);
-  
   console.log("Link: " + iptSearchLink);
   
-  var searchDiv = document.createElement("div");
-  searchDiv.className = "watch-option secondary-watch-option";
+}
+
+function stripPunctuation(title) {
+  var punctuationless = title.replace(/[.',\/#!$%\^&\*;:{}=\-_`~()]/g,"");
+  var finalString = punctuationless.replace(/\s{2,}/g," ");
   
-  var searchAnchor = document.createElement("a");
-  var searchText = document.createTextNode("Search IPT");
-  
-  searchAnchor.setAttribute("href", iptSearchLink);
-  searchAnchor.className = "iptsearch";
-  
-  searchAnchor.appendChild(searchText);
-  searchDiv.appendChild(searchAnchor);
-  parentDiv.appendChild(searchDiv);
+  return finalString;
 }
 
 //create the IPT search link
 //return escaped IPT search link for particular title
-//TODO: punctuation generally doesn't return good results, option to strip?
-function createIPTSearchLink(title, optionsObject, optionValues) {
-  link = "https://www.iptorrents.com/t?"
-
+//TODO: test cases for punctuation removal
+function createIPTSearchLink(title, optionsObject, optionValues, tv_show) {
+  link = "https://" + optionsObject["ipt_url"] + "/t?";
+  
+  // strip out punctuation for better results
+  strippedTitle = stripPunctuation(title);
+  
     // different base depending on title type and options
-    if (isTVSeries()) {
+    if (tv_show) {
       // only care about tv options
       // if all_tv selected, we don't need to loop
       if(optionsObject["all_tv"] == true)
@@ -202,7 +275,7 @@ function createIPTSearchLink(title, optionsObject, optionValues) {
 
   // TODO: test that escape works on weird chars in title
   // doesn't encode spaces, but somehow they get escaped when the tab opens
-  fullLink = link + "q=" + escape(title) + "#torrents"; 
+  fullLink = link + "q=" + escape(strippedTitle) + "#torrents"; 
 
   return fullLink;
 }
