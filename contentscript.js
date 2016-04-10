@@ -218,7 +218,7 @@ function addSearchButton(opt, optValues) {
 }
 
 function stripPunctuation(title) {
-  var punctuationless = title.replace(/[.',\/#!$%\^&\*;:{}=\-_`~()]/g,"");
+  var punctuationless = title.replace(/[',\/#!$%\^&\*;:{}=\-_`~()]/g,"");
   var finalString = punctuationless.replace(/\s{2,}/g," ");
   
   return finalString;
