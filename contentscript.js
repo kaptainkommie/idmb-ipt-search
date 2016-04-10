@@ -50,7 +50,9 @@ var DEFAULT_OPTIONS = { // options to use if loadOptions fails
     "tv_x264": true,
     "tv_xvid": true,
 
-    "sort_options": "newest"
+    "sort_options": "newest",
+    
+    "ipt_url": "iptorrents.com"  
 }
 
 var OPTION_VALUES = { // values associated with category
@@ -94,6 +96,7 @@ loadOptions(options, DEFAULT_OPTIONS, OPTION_VALUES);
 // similar function is present in options.js as well, but you can't include
 // a js file inside another pure JS file, oh well
 function loadOptions(optionsObject, defaultOptions, optionValues) {  
+  // TODO: does this execute even when storage sync fails?
   chrome.storage.sync.get(null, function(items) {
     if(!chrome.runtime.lastError) {
       if(Object.getOwnPropertyNames(items).length > 0)
@@ -158,7 +161,7 @@ function addSearchButton(opt, optValues) {
 //return escaped IPT search link for particular title
 //TODO: punctuation generally doesn't return good results, option to strip?
 function createIPTSearchLink(title, optionsObject, optionValues) {
-  link = "https://www.iptorrents.com/t?"
+  link = "https://" + optionsObject["ipt_url"] + "/t?";
 
     // different base depending on title type and options
     if (isTVSeries()) {

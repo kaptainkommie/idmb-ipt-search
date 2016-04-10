@@ -30,7 +30,9 @@ var DEFAULT_OPTIONS = { // options to use if storage.sync fails or doesn't exist
     "tv_x264": true,
     "tv_xvid": true,
 
-    "sort_options": "newest"
+    "sort_options": "newest",
+    
+    "ipt_url": "iptorrents.com"
 }
 
 var optionsElements = new Object(); // hold DOM "options" elements
@@ -70,7 +72,9 @@ function getOptionsElements(elements) {
       "tv_x264": document.getElementById("tv_x264"),
       "tv_xvid": document.getElementById("tv_xvid"),
 
-      "sort_options": document.getElementById("sort_options")
+      "sort_options": document.getElementById("sort_options"),
+      
+      "ipt_url": document.getElementById("ipt_url")
   }
 
   // copy options properties, to elements object
@@ -82,7 +86,7 @@ function getOptionsElements(elements) {
 function readOptionsPage(elements, optionsObject) {
   for (key in elements) {
     if(elements.hasOwnProperty(key)) {
-      if(key != "sort_options")
+      if(key != "sort_options" && key != "ipt_url")
         optionsObject[key] = elements[key].checked;
       else
         optionsObject[key] = elements[key].value;
@@ -93,7 +97,7 @@ function readOptionsPage(elements, optionsObject) {
 function writeOptionsPage(elements, optionsObject) {
   for(var key in elements) {
     if(elements.hasOwnProperty(key) && optionsObject.hasOwnProperty(key)) {
-      if(key != "sort_options") {
+      if(key != "sort_options" && key != "ipt_url") {
         elements[key].checked = optionsObject[key];
       }
       else
@@ -190,9 +194,13 @@ document.addEventListener("DOMContentLoaded", function(event) {
   initializeOptions(optionsElements, currentOptions, DEFAULT_OPTIONS);
 });
 
-document.getElementById('save').addEventListener('click', 
+document.getElementById("save").addEventListener("click", 
     function() {
   saveOptions(optionsElements, currentOptions);
 });
 
+document.getElementById("cancel").addEventListener("click", 
+    function() {
+  window.close();
+});
 

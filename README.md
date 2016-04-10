@@ -25,6 +25,9 @@ in their IPTorrents search. By default, all available categories are searched.
 In addition to the categories, the user may customize how the search results are
 sorted. By default, they are sorted by newest torrent.
 
+Users can now select which IPTorrents url they wish to use, all options use
+HTTPS.
+
 Screenshot of the options dialog:
 
 ![Options screenshot]
